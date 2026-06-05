@@ -1,31 +1,40 @@
 import { useState, useEffect } from 'react'
 
+const WMO: Record<number, { label: string; icon: string }> = {
+  0: { label: '晴', icon: '☀️' },
+  1: { label: '晴转多云', icon: '🌤️' },
+  2: { label: '多云', icon: '⛅' },
+  3: { label: '阴', icon: '☁️' },
+  45: { label: '雾', icon: '🌫️' },
+  48: { label: '冻雾', icon: '🌫️' },
+  51: { label: '毛毛雨', icon: '🌦️' },
+  53: { label: '毛毛雨', icon: '🌦️' },
+  55: { label: '毛毛雨', icon: '🌦️' },
+  61: { label: '小雨', icon: '🌧️' },
+  63: { label: '中雨', icon: '🌧️' },
+  65: { label: '大雨', icon: '🌧️' },
+  71: { label: '小雪', icon: '🌨️' },
+  73: { label: '中雪', icon: '🌨️' },
+  75: { label: '大雪', icon: '❄️' },
+  80: { label: '阵雨', icon: '🌦️' },
+  81: { label: '阵雨', icon: '🌦️' },
+  82: { label: '强阵雨', icon: '⛈️' },
+  95: { label: '雷暴', icon: '⛈️' },
+  96: { label: '雷暴冰雹', icon: '⛈️' },
+  99: { label: '强雷暴', icon: '⛈️' },
+}
+
 interface WeatherData {
-  city: string
   temp: number
   feelsLike: number
   condition: string
+  icon: string
   humidity: number
-  wind: number
-  windDir: string
-  visibility: number
+  windspeed: number
   uvIndex: number
 }
 
-// 天气图标映射
-function getWeatherIcon(condition: string): string {
-  const lower = condition.toLowerCase()
-  if (lower.includes('晴') || lower.includes('clear') || lower.includes('sunny')) return '☀️'
-  if (lower.includes('多云') || lower.includes('cloud')) return '⛅'
-  if (lower.includes('阴') || lower.includes('overcast')) return '☁️'
-  if (lower.includes('雨') || lower.includes('rain')) return '🌧️'
-  if (lower.includes('雪') || lower.includes('snow')) return '🌨️'
-  if (lower.includes('雾') || lower.includes('fog') || lower.includes('mist')) return '🌫️'
-  if (lower.includes('雷') || lower.includes('thunder')) return '⛈️'
-  return '🌤️'
-}
-
-/** 天气小部件 - 真实数据 */
+/** 天气 - Open-Meteo 免费 API，无需 key */
 export function WeatherWidget() {
   const [weather, setWeather] = useState<WeatherData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -34,10 +43,29 @@ export function WeatherWidget() {
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        const res = await fetch('/api/weather?city=Shanghai')
-        if (!res.ok) throw new Error('Failed')
+        const res = await fetch(
+          'https://api.open-meteo.com/v1/forecast' +
+          '?latitude=31.2304&longitude=121.4737' +
+          '&current_weather=true' +
+          '&hourly=relativehumidity_2m,apparent_temperature,uv_index' +
+          '&timezone=Asia%2FShanghai&forecast_days=1'
+        )
+        if (!res.ok) throw new Error('fetch failed')
         const data = await res.json()
-        setWeather(data)
+
+        const cw = data.current_weather
+        const hour = new Date().getHours()
+        const info = WMO[cw.weathercode] ?? { label: '未知', icon: '🌤️' }
+
+        setWeather({
+          temp: Math.round(cw.temperature),
+          feelsLike: Math.round(data.hourly.apparent_temperature?.[hour] ?? cw.temperature),
+          condition: info.label,
+          icon: info.icon,
+          humidity: data.hourly.relativehumidity_2m?.[hour] ?? 0,
+          windspeed: Math.round(cw.windspeed),
+          uvIndex: Math.round(data.hourly.uv_index?.[hour] ?? 0),
+        })
         setError(false)
       } catch {
         setError(true)
@@ -60,21 +88,18 @@ export function WeatherWidget() {
   if (error || !weather) {
     return (
       <div className="p-5 rounded-2xl bg-gradient-to-br from-sky-500/10 to-blue-600/10 border border-sky-500/20">
-        <div className="text-center text-white/30 text-sm">
-          天气数据获取失败
-        </div>
+        <div className="text-center text-white/30 text-sm py-4">天气数据获取失败</div>
       </div>
     )
   }
 
   return (
     <div className="p-5 rounded-2xl bg-gradient-to-br from-sky-500/10 to-blue-600/10 border border-sky-500/20">
-      {/* 头部 */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <span className="text-2xl">{getWeatherIcon(weather.condition)}</span>
+          <span className="text-2xl leading-none">{weather.icon}</span>
           <div>
-            <div className="text-sm font-medium text-white/80">{weather.city}</div>
+            <div className="text-sm font-medium text-white/80">上海</div>
             <div className="text-xs text-white/30">{weather.condition}</div>
           </div>
         </div>
@@ -83,8 +108,6 @@ export function WeatherWidget() {
           <div className="text-xs text-white/25">体感 {weather.feelsLike}°</div>
         </div>
       </div>
-
-      {/* 详情 */}
       <div className="grid grid-cols-3 gap-3 pt-3 border-t border-sky-500/10">
         <div className="text-center">
           <div className="text-xs text-white/30 mb-1">湿度</div>
@@ -92,7 +115,7 @@ export function WeatherWidget() {
         </div>
         <div className="text-center">
           <div className="text-xs text-white/30 mb-1">风速</div>
-          <div className="text-sm font-medium text-white/60">{weather.wind} km/h</div>
+          <div className="text-sm font-medium text-white/60">{weather.windspeed} km/h</div>
         </div>
         <div className="text-center">
           <div className="text-xs text-white/30 mb-1">紫外线</div>

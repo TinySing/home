@@ -4,11 +4,11 @@ type TimerMode = 'work' | 'break'
 type TimerStatus = 'idle' | 'running' | 'paused'
 
 const DURATIONS = {
-  work: 25 * 60,    // 25分钟
-  break: 5 * 60,    // 5分钟
+  work: 25 * 60,
+  break: 5 * 60,
 }
 
-/** 番茄钟组件 */
+/** 番茄钟 */
 export function PomodoroTimer() {
   const [mode, setMode] = useState<TimerMode>('work')
   const [status, setStatus] = useState<TimerStatus>('idle')
@@ -16,23 +16,19 @@ export function PomodoroTimer() {
   const [completedPomodoros, setCompletedPomodoros] = useState(0)
   const intervalRef = useRef<number | null>(null)
 
-  // 格式化时间
-  const formatTime = (totalSeconds: number) => {
-    const m = Math.floor(totalSeconds / 60)
-    const s = totalSeconds % 60
+  const formatTime = (total: number) => {
+    const m = Math.floor(total / 60)
+    const s = total % 60
     return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
   }
 
-  // 进度百分比
   const progress = ((DURATIONS[mode] - seconds) / DURATIONS[mode]) * 100
 
-  // 计时器逻辑
   useEffect(() => {
     if (status === 'running') {
       intervalRef.current = window.setInterval(() => {
         setSeconds((prev) => {
           if (prev <= 1) {
-            // 时间到
             clearInterval(intervalRef.current!)
             if (mode === 'work') {
               setCompletedPomodoros((c) => c + 1)
@@ -49,7 +45,6 @@ export function PomodoroTimer() {
         })
       }, 1000)
     }
-
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current)
     }
@@ -57,19 +52,11 @@ export function PomodoroTimer() {
 
   const handleStart = () => setStatus('running')
   const handlePause = () => setStatus('paused')
-  const handleReset = () => {
-    setStatus('idle')
-    setSeconds(DURATIONS[mode])
-  }
-
+  const handleReset = () => { setStatus('idle'); setSeconds(DURATIONS[mode]) }
   const handleSkip = () => {
-    if (mode === 'work') {
-      setMode('break')
-      setSeconds(DURATIONS.break)
-    } else {
-      setMode('work')
-      setSeconds(DURATIONS.work)
-    }
+    const next = mode === 'work' ? 'break' : 'work'
+    setMode(next)
+    setSeconds(DURATIONS[next])
     setStatus('idle')
   }
 
@@ -80,12 +67,9 @@ export function PomodoroTimer() {
           <span className="text-xl">🍅</span>
           <span className="text-sm font-semibold text-white/70">番茄钟</span>
         </div>
-        <span className="text-xs text-white/20">
-          已完成 {completedPomodoros} 个
-        </span>
+        <span className="text-xs text-white/20">已完成 {completedPomodoros} 个</span>
       </div>
 
-      {/* 模式标签 */}
       <div className="flex gap-2 mb-4">
         <button
           onClick={() => { setMode('work'); setSeconds(DURATIONS.work); setStatus('idle') }}
@@ -109,13 +93,10 @@ export function PomodoroTimer() {
         </button>
       </div>
 
-      {/* 时间显示 */}
       <div className="text-center mb-4">
         <div className="text-4xl font-mono font-light text-white tracking-wider mb-2">
           {formatTime(seconds)}
         </div>
-
-        {/* 进度条 */}
         <div className="w-full h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
           <div
             className={`h-full rounded-full transition-all duration-1000 ${
@@ -126,7 +107,6 @@ export function PomodoroTimer() {
         </div>
       </div>
 
-      {/* 控制按钮 */}
       <div className="flex items-center justify-center gap-3">
         {status === 'idle' && (
           <button
