@@ -45,7 +45,7 @@ export function WeatherWidget() {
       try {
         const res = await fetch(
           'https://api.open-meteo.com/v1/forecast' +
-          '?latitude=31.2304&longitude=121.4737' +
+          '?latitude=39.9042&longitude=116.4074' +
           '&current_weather=true' +
           '&hourly=relativehumidity_2m,apparent_temperature,uv_index' +
           '&timezone=Asia%2FShanghai&forecast_days=1'
@@ -99,7 +99,7 @@ export function WeatherWidget() {
         <div className="flex items-center gap-2">
           <span className="text-2xl leading-none">{weather.icon}</span>
           <div>
-            <div className="text-sm font-medium text-white/80">上海</div>
+            <div className="text-sm font-medium text-white/80">北京</div>
             <div className="text-xs text-white/30">{weather.condition}</div>
           </div>
         </div>

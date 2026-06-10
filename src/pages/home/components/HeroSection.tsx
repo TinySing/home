@@ -7,12 +7,7 @@ export function HeroSection() {
   const { greeting, dateStr } = useGreeting()
 
   return (
-    <section className="relative overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl" />
-      </div>
-
+    <section className="relative">
       <div className="relative max-w-7xl mx-auto px-6 py-16">
         <div className="flex flex-col items-center text-center">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight mb-4">

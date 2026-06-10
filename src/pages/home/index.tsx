@@ -1,15 +1,37 @@
-import { Header } from './components/Header'
+import { Suspense, lazy } from 'react'
 import { HeroSection } from './components/HeroSection'
 import { QuickLinks } from './components/QuickLinks'
 import { PomodoroTimer } from './components/PomodoroTimer'
+import { WeatherWidget } from './components/WeatherWidget'
+import { QuoteWidget } from './components/QuoteWidget'
+import { Game2048 } from './components/Game2048'
+import { ParticleBackground } from './components/ParticleBackground'
+
+const ThreeScene = lazy(() =>
+  import('./components/ThreeScene').then((m) => ({ default: m.ThreeScene })),
+)
 
 /** 首页 */
 export function HomePage() {
   return (
-    <div className="min-h-screen bg-[#0a0a1a] flex flex-col">
-      <Header />
+    <div className="relative min-h-screen bg-[#0a0a1a] flex flex-col">
+      <ParticleBackground />
+      <div className="relative z-10 flex flex-col min-h-screen">
       <HeroSection />
       <QuickLinks />
+
+      <section className="w-full max-w-7xl mx-auto px-6 pb-6 grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
+        <WeatherWidget />
+        <QuoteWidget />
+        <Game2048 />
+        <Suspense
+          fallback={
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-blue-600/10 border border-cyan-500/20 aspect-[4/3] animate-pulse" />
+          }
+        >
+          <ThreeScene />
+        </Suspense>
+      </section>
 
       <section className="w-full max-w-7xl mx-auto px-6 pb-12">
         <PomodoroTimer />
@@ -32,6 +54,7 @@ export function HomePage() {
           </div>
         </div>
       </footer>
+      </div>
     </div>
   )
 }
