@@ -23,18 +23,21 @@ export function HomePage() {
       <section className="w-full max-w-7xl mx-auto px-6 pb-6 grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
         <WeatherWidget />
         <QuoteWidget />
+      </section>
+
+      <section className="w-full max-w-7xl mx-auto px-6 pb-6">
+        <PomodoroTimer />
+      </section>
+
+      <section className="w-full max-w-7xl mx-auto px-6 pb-12 grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
         <Game2048 />
         <Suspense
           fallback={
-            <div className="p-5 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-blue-600/10 border border-cyan-500/20 aspect-[4/3] animate-pulse" />
+            <div className="min-w-0 min-h-[320px] p-5 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-blue-600/10 border border-cyan-500/20 animate-pulse" />
           }
         >
           <ThreeScene />
         </Suspense>
-      </section>
-
-      <section className="w-full max-w-7xl mx-auto px-6 pb-12">
-        <PomodoroTimer />
       </section>
 
       <footer className="mt-auto border-t border-white/[0.04] py-8">
