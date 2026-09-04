@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { HudPanel } from './HudPanel'
 
 interface Quote {
   text: string
@@ -14,7 +15,6 @@ const FALLBACK: Quote[] = [
   { text: '海内存知己，天涯若比邻。', from: '王勃' },
 ]
 
-/** 每日一言 - hitokoto 免费 API，失败回退本地句库 */
 export function QuoteWidget() {
   const [quote, setQuote] = useState<Quote | null>(null)
   const [loading, setLoading] = useState(true)
@@ -46,32 +46,35 @@ export function QuoteWidget() {
   }, [nonce])
 
   return (
-    <div className="p-5 rounded-2xl bg-gradient-to-br from-violet-500/10 to-purple-600/10 border border-violet-500/20 flex flex-col">
+    <HudPanel className="p-5 h-full flex flex-col corner-rose">
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <span className="text-xl">💭</span>
-          <span className="text-sm font-semibold text-white/70">每日一言</span>
+        <div className="font-display text-sm font-semibold tracking-[0.18em] text-[#b06a6a] uppercase">
+          Pulse Quote
         </div>
         <button
           onClick={refresh}
           disabled={loading}
-          className="text-xs text-white/30 hover:text-white/60 transition-colors disabled:opacity-40"
+          className="font-mono text-[11px] text-[#9aa0a6] hover:text-[#b06a6a] transition-colors disabled:opacity-40"
         >
-          ↻ 换一条
+          NEXT
         </button>
       </div>
 
       {loading ? (
         <div className="flex-1 flex flex-col justify-center gap-2 animate-pulse">
-          <div className="h-4 bg-white/[0.05] rounded w-full" />
-          <div className="h-4 bg-white/[0.05] rounded w-2/3" />
+          <div className="h-4 bg-[#eee8df] rounded w-full" />
+          <div className="h-4 bg-[#eee8df] rounded w-2/3" />
         </div>
       ) : (
         <div className="flex-1 flex flex-col justify-center">
-          <p className="text-base leading-relaxed text-white/80">“{quote?.text}”</p>
-          <p className="text-xs text-white/30 mt-3 text-right">—— {quote?.from}</p>
+          <p className="text-base leading-relaxed text-[#4a5560]">
+            “{quote?.text}”
+          </p>
+          <p className="font-mono text-[11px] text-[#9aa0a6] mt-4 text-right">
+            — {quote?.from}
+          </p>
         </div>
       )}
-    </div>
+    </HudPanel>
   )
 }

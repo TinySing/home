@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { HudPanel } from './HudPanel'
 
 type TimerMode = 'work' | 'break'
 type TimerStatus = 'idle' | 'running' | 'paused'
@@ -8,7 +9,6 @@ const DURATIONS = {
   break: 5 * 60,
 }
 
-/** 番茄钟 */
 export function PomodoroTimer() {
   const [mode, setMode] = useState<TimerMode>('work')
   const [status, setStatus] = useState<TimerStatus>('idle')
@@ -52,7 +52,10 @@ export function PomodoroTimer() {
 
   const handleStart = () => setStatus('running')
   const handlePause = () => setStatus('paused')
-  const handleReset = () => { setStatus('idle'); setSeconds(DURATIONS[mode]) }
+  const handleReset = () => {
+    setStatus('idle')
+    setSeconds(DURATIONS[mode])
+  }
   const handleSkip = () => {
     const next = mode === 'work' ? 'break' : 'work'
     setMode(next)
@@ -60,47 +63,59 @@ export function PomodoroTimer() {
     setStatus('idle')
   }
 
+  const btnBase =
+    'font-mono text-[11px] tracking-wider px-3 py-1.5 border transition-colors'
+
   return (
-    <div className="p-5 rounded-2xl bg-gradient-to-br from-rose-500/10 to-pink-600/10 border border-rose-500/20">
+    <HudPanel className="p-5 corner-rose">
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <span className="text-xl">🍅</span>
-          <span className="text-sm font-semibold text-white/70">番茄钟</span>
+        <div className="font-display text-sm font-semibold tracking-[0.18em] text-[#b06a6a] uppercase">
+          Focus Timer
         </div>
-        <span className="text-xs text-white/20">已完成 {completedPomodoros} 个</span>
+        <span className="font-mono text-[11px] text-[#9aa0a6]">
+          DONE {completedPomodoros}
+        </span>
       </div>
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-5">
         <button
-          onClick={() => { setMode('work'); setSeconds(DURATIONS.work); setStatus('idle') }}
-          className={`px-3 py-1 rounded-lg text-xs transition-all ${
+          onClick={() => {
+            setMode('work')
+            setSeconds(DURATIONS.work)
+            setStatus('idle')
+          }}
+          className={`${btnBase} ${
             mode === 'work'
-              ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
-              : 'bg-white/[0.04] text-white/30 border border-white/[0.06] hover:text-white/50'
+              ? 'bg-[#f3e8e8] text-[#b06a6a] border-[#e0c8c8]'
+              : 'bg-transparent text-[#9aa0a6] border-[#ddd6cc] hover:text-[#4a5560]'
           }`}
         >
-          专注 25min
+          WORK 25
         </button>
         <button
-          onClick={() => { setMode('break'); setSeconds(DURATIONS.break); setStatus('idle') }}
-          className={`px-3 py-1 rounded-lg text-xs transition-all ${
+          onClick={() => {
+            setMode('break')
+            setSeconds(DURATIONS.break)
+            setStatus('idle')
+          }}
+          className={`${btnBase} ${
             mode === 'break'
-              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-              : 'bg-white/[0.04] text-white/30 border border-white/[0.06] hover:text-white/50'
+              ? 'bg-[#e8f0ec] text-[#3d6b5a] border-[#c5d6cd]'
+              : 'bg-transparent text-[#9aa0a6] border-[#ddd6cc] hover:text-[#4a5560]'
           }`}
         >
-          休息 5min
+          BREAK 5
         </button>
       </div>
 
       <div className="text-center mb-4">
-        <div className="text-4xl font-mono font-light text-white tracking-wider mb-2">
+        <div className="font-display text-5xl font-medium text-[#2c3338] tracking-widest tabular-nums mb-3">
           {formatTime(seconds)}
         </div>
-        <div className="w-full h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+        <div className="w-full h-1 bg-[#eee8df] overflow-hidden">
           <div
-            className={`h-full rounded-full transition-all duration-1000 ${
-              mode === 'work' ? 'bg-rose-400' : 'bg-emerald-400'
+            className={`h-full transition-all duration-1000 ${
+              mode === 'work' ? 'bg-[#b06a6a]' : 'bg-[#3d6b5a]'
             }`}
             style={{ width: `${progress}%` }}
           />
@@ -111,44 +126,44 @@ export function PomodoroTimer() {
         {status === 'idle' && (
           <button
             onClick={handleStart}
-            className="px-5 py-2 rounded-xl bg-white/[0.08] border border-white/[0.1] text-sm text-white/70 hover:bg-white/[0.12] hover:text-white transition-all"
+            className={`${btnBase} bg-[#f3e8e8] text-[#b06a6a] border-[#e0c8c8] hover:bg-[#eadada] px-5`}
           >
-            ▶ 开始
+            START
           </button>
         )}
         {status === 'running' && (
           <button
             onClick={handlePause}
-            className="px-5 py-2 rounded-xl bg-white/[0.08] border border-white/[0.1] text-sm text-white/70 hover:bg-white/[0.12] hover:text-white transition-all"
+            className={`${btnBase} bg-[#f3e8e8] text-[#b06a6a] border-[#e0c8c8] hover:bg-[#eadada] px-5`}
           >
-            ⏸ 暂停
+            PAUSE
           </button>
         )}
         {status === 'paused' && (
           <>
             <button
               onClick={handleStart}
-              className="px-5 py-2 rounded-xl bg-white/[0.08] border border-white/[0.1] text-sm text-white/70 hover:bg-white/[0.12] hover:text-white transition-all"
+              className={`${btnBase} bg-[#f3e8e8] text-[#b06a6a] border-[#e0c8c8] hover:bg-[#eadada] px-5`}
             >
-              ▶ 继续
+              RESUME
             </button>
             <button
               onClick={handleReset}
-              className="px-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.06] text-xs text-white/40 hover:text-white/60 transition-all"
+              className={`${btnBase} text-[#9aa0a6] border-[#ddd6cc] hover:text-[#4a5560]`}
             >
-              ↺ 重置
+              RESET
             </button>
           </>
         )}
         {status !== 'idle' && (
           <button
             onClick={handleSkip}
-            className="px-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.06] text-xs text-white/40 hover:text-white/60 transition-all"
+            className={`${btnBase} text-[#9aa0a6] border-[#ddd6cc] hover:text-[#4a5560]`}
           >
-            ⏭ 跳过
+            SKIP
           </button>
         )}
       </div>
-    </div>
+    </HudPanel>
   )
 }

@@ -6,4 +6,9 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3001
+      # 新闻库路径：与 volumes 挂载目标保持一致，服务器上改这里即可
+      - RADARDB_NEWS_PATH=/data/radardb/news
+    volumes:
+      # 宿主机 radardb/news → 容器内路径（按实际部署位置调整左侧）
+      - ../radardb/news:/data/radardb/news:ro
     restart: unless-stopped

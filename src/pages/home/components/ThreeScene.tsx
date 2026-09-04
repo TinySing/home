@@ -242,17 +242,20 @@ export function ThreeScene() {
   }, [failed])
 
   return (
-    <div className="min-w-0 p-5 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-blue-600/10 border border-cyan-500/20">
+    <div className="hud-panel corner-indigo min-w-0 p-5 h-full">
       <div className="flex items-center gap-2 mb-3">
-        <span className="text-xl">✨</span>
-        <span className="text-sm font-semibold text-white/70">3D 星体</span>
-        <span className="text-xs text-white/25 ml-auto">拖拽旋转 · 点击换色</span>
+        <span className="font-display text-sm font-semibold tracking-[0.18em] text-[#5b6b8a] uppercase">
+          Orbital View
+        </span>
+        <span className="font-mono text-[10px] text-[#9aa0a6] ml-auto">DRAG · CLICK</span>
       </div>
       <div
         ref={mountRef}
-        className="w-full min-w-0 max-w-full aspect-[4/3] rounded-xl overflow-hidden flex items-center justify-center"
+        className="w-full min-w-0 max-w-full aspect-[4/3] overflow-hidden flex items-center justify-center border border-[#ddd6cc] bg-gradient-to-br from-[#e9ecf2] via-[#f0ebe3] to-[#e8f0ec]"
       >
-        {failed && <span className="text-xs text-white/30">当前设备不支持 3D 渲染</span>}
+        {failed && (
+          <span className="font-mono text-xs text-[#9aa0a6]">3D UNAVAILABLE</span>
+        )}
       </div>
     </div>
   )

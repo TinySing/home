@@ -7,18 +7,18 @@ const SIZE = 4
 const BEST_KEY = 'game2048_best'
 
 const TILE_STYLE: Record<number, string> = {
-  0: 'bg-white/[0.03] text-transparent',
-  2: 'bg-slate-500/20 text-white/80',
-  4: 'bg-slate-400/25 text-white/90',
-  8: 'bg-amber-500/30 text-amber-100',
-  16: 'bg-amber-500/40 text-amber-100',
-  32: 'bg-orange-500/40 text-orange-100',
-  64: 'bg-orange-500/55 text-orange-100',
-  128: 'bg-rose-500/40 text-rose-100',
-  256: 'bg-rose-500/55 text-rose-100',
-  512: 'bg-fuchsia-500/50 text-fuchsia-100',
-  1024: 'bg-violet-500/55 text-violet-100',
-  2048: 'bg-sky-500/60 text-sky-50',
+  0: 'bg-[#f0ebe3] text-transparent',
+  2: 'bg-[#e8f0ec] text-[#3d6b5a]',
+  4: 'bg-[#dce8e2] text-[#2f5446]',
+  8: 'bg-[#f3ecdf] text-[#b8894a]',
+  16: 'bg-[#eadfc8] text-[#8a6a35]',
+  32: 'bg-[#f3e8e8] text-[#b06a6a]',
+  64: 'bg-[#e8d4d4] text-[#8f5252]',
+  128: 'bg-[#e9ecf2] text-[#5b6b8a]',
+  256: 'bg-[#d5dae6] text-[#3f4d6a]',
+  512: 'bg-[#c5d6cd] text-[#2f5446]',
+  1024: 'bg-[#3d6b5a] text-white',
+  2048: 'bg-[#b06a6a] text-white',
 }
 
 function emptyBoard(): Board {
@@ -153,29 +153,28 @@ export function Game2048() {
   }, [handleMove])
 
   return (
-    <div className="p-5 rounded-2xl bg-gradient-to-br from-indigo-500/10 to-blue-600/10 border border-indigo-500/20">
+    <div className="hud-panel corner-indigo p-5 h-full">
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <span className="text-xl">🎮</span>
-          <span className="text-sm font-semibold text-white/70">2048</span>
+        <div className="font-display text-sm font-semibold tracking-[0.18em] text-[#5b6b8a] uppercase">
+          Grid 2048
         </div>
-        <div className="flex items-center gap-2 text-xs">
-          <span className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.06] text-white/50">
-            分数 <span className="font-mono text-white/80">{score}</span>
+        <div className="flex items-center gap-2 text-xs font-mono">
+          <span className="px-2.5 py-1 border border-[#ddd6cc] text-[#9aa0a6]">
+            SCR <span className="text-[#3d6b5a]">{score}</span>
           </span>
-          <span className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.06] text-white/50">
-            最高 <span className="font-mono text-white/80">{best}</span>
+          <span className="px-2.5 py-1 border border-[#ddd6cc] text-[#9aa0a6]">
+            BEST <span className="text-[#b8894a]">{best}</span>
           </span>
         </div>
       </div>
 
       <div className="relative">
-        <div className="grid grid-cols-4 gap-2 p-2 rounded-xl bg-white/[0.02]">
+        <div className="grid grid-cols-4 gap-2 p-2 bg-[#f0ebe3]/70 border border-[#eee8df]">
           {board.flat().map((v, i) => (
             <div
               key={i}
-              className={`aspect-square rounded-lg flex items-center justify-center font-mono font-bold transition-colors ${
-                TILE_STYLE[v] ?? 'bg-sky-500/60 text-sky-50'
+              className={`aspect-square flex items-center justify-center font-mono font-bold transition-colors ${
+                TILE_STYLE[v] ?? 'bg-[#3d6b5a] text-white'
               } ${v >= 1024 ? 'text-base' : 'text-xl'}`}
             >
               {v || ''}
@@ -184,34 +183,34 @@ export function Game2048() {
         </div>
 
         {!started && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xl bg-[#0a0a1a]/80 backdrop-blur-sm gap-3">
-            <div className="text-sm text-white/50">合并方块,凑出 2048</div>
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#fcf9f4]/90 backdrop-blur-sm gap-3">
+            <div className="text-sm text-[#8a8178] font-mono">MERGE TO 2048</div>
             <button
               onClick={start}
-              className="px-6 py-2.5 rounded-xl bg-indigo-500/30 border border-indigo-400/40 text-sm font-semibold text-white hover:bg-indigo-500/45 transition-all"
+              className="px-6 py-2.5 font-mono text-xs tracking-wider bg-[#e8f0ec] border border-[#c5d6cd] text-[#3d6b5a] hover:bg-[#dce8e2] transition-all"
             >
-              ▶ 开始游戏
+              START
             </button>
           </div>
         )}
 
         {started && (over || won) && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xl bg-[#0a0a1a]/80 backdrop-blur-sm gap-3">
-            <div className="text-2xl font-bold text-white">
-              {won && !over ? '🎉 达成 2048!' : '游戏结束'}
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#fcf9f4]/90 backdrop-blur-sm gap-3">
+            <div className="font-display text-xl font-semibold text-[#2c3338]">
+              {won && !over ? 'CLEAR 2048' : 'GAME OVER'}
             </div>
             <button
               onClick={start}
-              className="px-5 py-2 rounded-xl bg-white/[0.1] border border-white/[0.15] text-sm text-white hover:bg-white/[0.18] transition-all"
+              className="px-5 py-2 font-mono text-xs tracking-wider bg-[#f3e8e8] border border-[#e0c8c8] text-[#b06a6a] hover:bg-[#eadada] transition-all"
             >
-              再来一局
+              RETRY
             </button>
           </div>
         )}
       </div>
 
       <div className="flex items-center justify-between mt-4">
-        <span className="text-xs text-white/25 hidden sm:block">方向键 ← ↑ → ↓ 操作</span>
+        <span className="text-xs text-[#9aa0a6] hidden sm:block font-mono">ARROWS TO MOVE</span>
         <div className="grid grid-cols-3 gap-1.5 sm:hidden">
           <span />
           <DirBtn label="↑" onClick={() => handleMove('up')} />
@@ -222,9 +221,9 @@ export function Game2048() {
         </div>
         <button
           onClick={start}
-          className="px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.06] text-xs text-white/40 hover:text-white/60 transition-all"
+          className="px-3 py-1.5 font-mono text-[11px] tracking-wider border border-[#ddd6cc] text-[#9aa0a6] hover:text-[#3d6b5a] transition-all"
         >
-          ↺ 重开
+          RESET
         </button>
       </div>
     </div>
@@ -235,7 +234,7 @@ function DirBtn({ label, onClick }: { label: string; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="w-9 h-9 rounded-lg bg-white/[0.06] border border-white/[0.08] text-white/60 hover:bg-white/[0.12] transition-all flex items-center justify-center"
+      className="w-9 h-9 bg-[#f0ebe3] border border-[#ddd6cc] text-[#4a5560] hover:bg-[#eee8df] transition-all flex items-center justify-center"
     >
       {label}
     </button>

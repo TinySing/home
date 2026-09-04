@@ -90,7 +90,7 @@ export function ParticleBackground() {
         if (alpha <= 0) continue
         ctx.beginPath()
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(226, 232, 240, ${alpha})`
+        ctx.fillStyle = `rgba(61, 107, 90, ${alpha * 0.2})`
         ctx.fill()
       }
 
@@ -100,7 +100,6 @@ export function ParticleBackground() {
         if (p.x < 0 || p.x > width) p.vx *= -1
         if (p.y < 0 || p.y > height) p.vy *= -1
 
-        // 鼠标轻推
         const mdx = p.x - mouse.x
         const mdy = p.y - mouse.y
         const md = Math.hypot(mdx, mdy)
@@ -111,8 +110,15 @@ export function ParticleBackground() {
         }
 
         ctx.beginPath()
-        ctx.arc(p.x, p.y, 1.9, 0, Math.PI * 2)
-        ctx.fillStyle = 'rgba(125, 211, 252, 0.85)'
+        ctx.arc(p.x, p.y, 1.8, 0, Math.PI * 2)
+        // 柔和多色粒子
+        const hues = [
+          'rgba(61, 107, 90, 0.4)',
+          'rgba(176, 106, 106, 0.4)',
+          'rgba(184, 137, 74, 0.4)',
+          'rgba(91, 107, 138, 0.4)',
+        ]
+        ctx.fillStyle = hues[Math.floor((p.x + p.y) / 80) % hues.length]
         ctx.fill()
       }
 
@@ -125,7 +131,7 @@ export function ParticleBackground() {
             ctx.beginPath()
             ctx.moveTo(a.x, a.y)
             ctx.lineTo(b.x, b.y)
-            ctx.strokeStyle = `rgba(120, 175, 255, ${0.32 * (1 - d / LINK_DIST)})`
+            ctx.strokeStyle = `rgba(90, 100, 100, ${0.12 * (1 - d / LINK_DIST)})`
             ctx.lineWidth = 1
             ctx.stroke()
           }
