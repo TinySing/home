@@ -112,6 +112,9 @@
   .corner-violet {
     --corner-color: #7b6baa;
   }
+  .corner-cyan {
+    --corner-color: #4a8a8a;
+  }
 
   .grid-atmosphere {
     background-image:

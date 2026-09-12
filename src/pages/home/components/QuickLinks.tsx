@@ -54,6 +54,17 @@ const links = [
     titleClass: 'text-[#7b6baa] group-hover:text-[#63558f]',
     bar: 'bg-[#7b6baa]',
   },
+  {
+    id: '6',
+    title: '在线做题',
+    description: '软考真题练习',
+    url: '/practice/',
+    tag: 'TEST',
+    corner: 'corner-cyan',
+    tagClass: 'text-[#4a8a8a]',
+    titleClass: 'text-[#4a8a8a] group-hover:text-[#3c7070]',
+    bar: 'bg-[#4a8a8a]',
+  },
 ]
 
 /** 快捷入口 — 四色分区 */
