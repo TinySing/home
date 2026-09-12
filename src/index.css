@@ -109,6 +109,9 @@
   .corner-indigo {
     --corner-color: #5b6b8a;
   }
+  .corner-violet {
+    --corner-color: #7b6baa;
+  }
 
   .grid-atmosphere {
     background-image:

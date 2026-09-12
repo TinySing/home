@@ -43,6 +43,17 @@ const links = [
     titleClass: 'text-[#5b6b8a] group-hover:text-[#475574]',
     bar: 'bg-[#5b6b8a]',
   },
+  {
+    id: '5',
+    title: '软考刷题',
+    description: '软考练习平台',
+    url: '/soft-exam/',
+    tag: 'EXAM',
+    corner: 'corner-violet',
+    tagClass: 'text-[#7b6baa]',
+    titleClass: 'text-[#7b6baa] group-hover:text-[#63558f]',
+    bar: 'bg-[#7b6baa]',
+  },
 ]
 
 /** 快捷入口 — 四色分区 */

@@ -9,12 +9,11 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 const app = express()
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3003
 
-// radardb/news 目录：优先环境变量，服务器部署时可挂载任意路径
-const DEFAULT_NEWS_DIR = resolve(__dirname, '../../radardb/news')
+// TrendRadar 新闻数据目录（和 Console 共用）
 const RADARDB_NEWS_PATH = resolve(
-  process.env.RADARDB_NEWS_PATH || DEFAULT_NEWS_DIR,
+  process.env.RADARDB_NEWS_PATH || '/data/trendradar/output/news',
 )
 
 app.use(cors())
@@ -157,7 +156,7 @@ app.get('/api/news', (req, res) => {
   }
 })
 
-// SPA fallback（Express 5 不用裸 *）
+// SPA fallback
 app.use((req, res, next) => {
   if (req.method !== 'GET' && req.method !== 'HEAD') return next()
   if (req.path.startsWith('/api/')) return next()
